@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS currencies;
 
 CREATE TABLE currencies (
-                           ticker VARCHAR(3) PRIMARY KEY NOT NULL,
+                           ticker VARCHAR(10) PRIMARY KEY NOT NULL,
                            name VARCHAR(250) NOT NULL,
                            number_of_coins long NOT NULL,
                            market_cap long NOT NULL
