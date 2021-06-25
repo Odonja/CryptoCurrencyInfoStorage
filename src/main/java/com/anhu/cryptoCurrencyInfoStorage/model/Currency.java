@@ -18,17 +18,17 @@ public class Currency {
     private String name;
 
     @Column(name = "number_of_coins")
-    private long number_of_coins;
+    private long numberOfCoins;
 
     @Column(name = "market_cap")
-    private long market_cap;
+    private long marketCap;
 
 
-    public Currency(String ticker, String name, long number_of_coins, long market_cap) {
+    public Currency(String ticker, String name, long numberOfCoins, long market_cap) {
         this.ticker = ticker;
         this.name = name;
-        this.number_of_coins = number_of_coins;
-        this.market_cap = market_cap;
+        this.numberOfCoins = numberOfCoins;
+        this.marketCap = market_cap;
     }
 
     public Currency() {
@@ -51,20 +51,20 @@ public class Currency {
         this.name = name;
     }
 
-    public long getNumber_of_coins() {
-        return number_of_coins;
+    public long getNumberOfCoins() {
+        return numberOfCoins;
     }
 
-    public void setNumber_of_coins(long number_of_coins) {
-        this.number_of_coins = number_of_coins;
+    public void setNumberOfCoins(long number_of_coins) {
+        this.numberOfCoins = number_of_coins;
     }
 
-    public long getMarket_cap() {
-        return market_cap;
+    public long getMarketCap() {
+        return marketCap;
     }
 
-    public void setMarket_cap(long market_cap) {
-        this.market_cap = market_cap;
+    public void setMarketCap(long market_cap) {
+        this.marketCap = market_cap;
     }
 
     @Override
@@ -72,12 +72,12 @@ public class Currency {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Currency currency = (Currency) o;
-        return number_of_coins == currency.number_of_coins && market_cap == currency.market_cap && ticker.equals(currency.ticker) && name.equals(currency.name);
+        return numberOfCoins == currency.numberOfCoins && marketCap == currency.marketCap && ticker.equals(currency.ticker) && name.equals(currency.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ticker, name, number_of_coins, market_cap);
+        return Objects.hash(ticker, name, numberOfCoins, marketCap);
     }
 
     @Override
@@ -85,8 +85,8 @@ public class Currency {
         return "Currency{" +
                 "ticker='" + ticker + '\'' +
                 ", name='" + name + '\'' +
-                ", number_of_coins=" + number_of_coins +
-                ", market_cap=" + market_cap +
+                ", number_of_coins=" + numberOfCoins +
+                ", market_cap=" + marketCap +
                 '}';
     }
 }
