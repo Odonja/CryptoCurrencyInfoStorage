@@ -23,11 +23,11 @@ public class Currency {
     @Column(name = "market_cap")
     private long marketCap;
 
-    public Currency(String ticker, String name, long numberOfCoins, long market_cap) {
+    public Currency(String ticker, String name, long numberOfCoins, long marketCap) {
         this.ticker = ticker;
         this.name = name;
         this.numberOfCoins = numberOfCoins;
-        this.marketCap = market_cap;
+        this.marketCap = marketCap;
     }
 
     public Currency() {
@@ -54,16 +54,16 @@ public class Currency {
         return numberOfCoins;
     }
 
-    public void setNumberOfCoins(long number_of_coins) {
-        this.numberOfCoins = number_of_coins;
+    public void setNumberOfCoins(long numberOfCoins) {
+        this.numberOfCoins = numberOfCoins;
     }
 
     public long getMarketCap() {
         return marketCap;
     }
 
-    public void setMarketCap(long market_cap) {
-        this.marketCap = market_cap;
+    public void setMarketCap(long marketCap) {
+        this.marketCap = marketCap;
     }
 
     @Override
@@ -84,8 +84,8 @@ public class Currency {
         return "Currency{" +
                 "ticker='" + ticker + '\'' +
                 ", name='" + name + '\'' +
-                ", number_of_coins=" + numberOfCoins +
-                ", market_cap=" + marketCap +
+                ", numberOfCoins=" + numberOfCoins +
+                ", marketCap=" + marketCap +
                 '}';
     }
 

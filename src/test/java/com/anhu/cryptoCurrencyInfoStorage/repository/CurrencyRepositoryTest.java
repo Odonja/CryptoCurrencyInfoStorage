@@ -37,17 +37,17 @@ public class CurrencyRepositoryTest {
     public void testAddCurrency_repositoryContainsCurrency() {
         String ticker = "DOGE";
         String name = "Dogecoin";
-        long number_of_coins = 129400000;
-        long market_cap = 5310000;
+        long numberOfCoins = 129400000;
+        long marketCap = 5310000;
 
-        Currency currency = repository.save(new Currency(ticker, name, number_of_coins, market_cap));
+        Currency currency = repository.save(new Currency(ticker, name, numberOfCoins, marketCap));
         Iterable<Currency> currencies = repository.findAll();
         assertThat(currencies).hasSize(5);
 
         assertThat(currency).hasFieldOrPropertyWithValue("ticker", ticker);
         assertThat(currency).hasFieldOrPropertyWithValue("name", name);
-        assertThat(currency).hasFieldOrPropertyWithValue("number_of_coins", number_of_coins);
-        assertThat(currency).hasFieldOrPropertyWithValue("market_cap", market_cap);
+        assertThat(currency).hasFieldOrPropertyWithValue("numberOfCoins", numberOfCoins);
+        assertThat(currency).hasFieldOrPropertyWithValue("marketCap", marketCap);
     }
 
     @Test
@@ -113,10 +113,10 @@ public class CurrencyRepositoryTest {
         int indexCurrencyToBeChanged = 0;
         String ticker = StandardData.getStandardTickers()[indexCurrencyToBeChanged];
         String name = "updated " + StandardData.getStandardNames()[indexCurrencyToBeChanged];
-        long number_of_coins = StandardData.getStandardNrOfCoins()[indexCurrencyToBeChanged] + 10;
-        long market_cap = StandardData.getStandardMarketCap()[indexCurrencyToBeChanged] + 10;
+        long numberOfCoins = StandardData.getStandardNrOfCoins()[indexCurrencyToBeChanged] + 10;
+        long marketCap = StandardData.getStandardMarketCap()[indexCurrencyToBeChanged] + 10;
 
-        Currency updatedCurrency = new Currency(ticker, name, number_of_coins, market_cap);
+        Currency updatedCurrency = new Currency(ticker, name, numberOfCoins, marketCap);
 
         Optional<Currency> optionalCurrency = repository.findById(StandardData.getStandardTickers()[indexCurrencyToBeChanged]);
         if(optionalCurrency.isPresent()) {
@@ -133,8 +133,8 @@ public class CurrencyRepositoryTest {
                 Currency checkCurrency = optionalCheckCurrency.get();
                 assertThat(checkCurrency).hasFieldOrPropertyWithValue("ticker", ticker);
                 assertThat(checkCurrency).hasFieldOrPropertyWithValue("name", name);
-                assertThat(checkCurrency).hasFieldOrPropertyWithValue("number_of_coins", number_of_coins);
-                assertThat(checkCurrency).hasFieldOrPropertyWithValue("market_cap", market_cap);
+                assertThat(checkCurrency).hasFieldOrPropertyWithValue("numberOfCoins", numberOfCoins);
+                assertThat(checkCurrency).hasFieldOrPropertyWithValue("marketCap", marketCap);
             }else {
                 fail("did not find currency by id");
             }
