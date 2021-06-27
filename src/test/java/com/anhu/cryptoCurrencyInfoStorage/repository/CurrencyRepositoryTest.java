@@ -35,28 +35,31 @@ public class CurrencyRepositoryTest {
 
     @Test
     public void testAddCurrency_repositoryContainsCurrency() {
-        String ticker = "DOGE";
-        String name = "Dogecoin";
-        long numberOfCoins = 129400000;
-        long marketCap = 5310000;
+        Currency currency = new Currency.Builder()
+                .ticker("DOGE")
+                .name("Dogecoin")
+                .numberOfCoins(129400000)
+                .marketCap(5310000)
+                .build();
 
-        Currency currency = repository.save(new Currency(ticker, name, numberOfCoins, marketCap));
+        Currency newCurrency = repository.save(currency);
         Iterable<Currency> currencies = repository.findAll();
         assertThat(currencies).hasSize(5);
 
-        assertThat(currency).hasFieldOrPropertyWithValue("ticker", ticker);
-        assertThat(currency).hasFieldOrPropertyWithValue("name", name);
-        assertThat(currency).hasFieldOrPropertyWithValue("numberOfCoins", numberOfCoins);
-        assertThat(currency).hasFieldOrPropertyWithValue("marketCap", marketCap);
+        assertThat(currency).hasFieldOrPropertyWithValue("ticker", currency.getTicker());
+        assertThat(currency).hasFieldOrPropertyWithValue("name", currency.getName());
+        assertThat(currency).hasFieldOrPropertyWithValue("numberOfCoins", currency.getNumberOfCoins());
+        assertThat(currency).hasFieldOrPropertyWithValue("marketCap", currency.getMarketCap());
     }
 
     @Test
     public void testFindAllCurrencies_shouldFindAllEntries(){
-        String ticker = "DOGE";
-        String name = "Dogecoin";
-        long number_of_coins = 129400000;
-        long market_cap = 5310000;
-        Currency newCurrency = new Currency(ticker, name, number_of_coins, market_cap);
+        Currency newCurrency = new Currency.Builder()
+                .ticker("DOGE")
+                .name("Dogecoin")
+                .numberOfCoins(129400000)
+                .marketCap(5310000)
+                .build();
 
         repository.save(newCurrency);
         Iterable<Currency> currencies = repository.findAll();
@@ -74,14 +77,16 @@ public class CurrencyRepositoryTest {
         repository.deleteAll();
         assertThat(repository.findAll()).isEmpty();
 
-        String ticker = "DOGE";
-        String name = "Dogecoin";
-        long number_of_coins = 129400000;
-        long market_cap = 5310000;
+        Currency newCurrency = new Currency.Builder()
+                .ticker("DOGE")
+                .name("Dogecoin")
+                .numberOfCoins(129400000)
+                .marketCap(5310000)
+                .build();
 
-        Currency currency = repository.save(new Currency(ticker, name, number_of_coins, market_cap));
+        Currency savedCurrency = repository.save(newCurrency);
         Iterable<Currency> currencies = repository.findAll();
-        assertThat(currencies).hasSize(1).contains(currency);
+        assertThat(currencies).hasSize(1).contains(savedCurrency);
     }
 
     @Test
@@ -116,16 +121,17 @@ public class CurrencyRepositoryTest {
         long numberOfCoins = StandardData.getStandardNrOfCoins()[indexCurrencyToBeChanged] + 10;
         long marketCap = StandardData.getStandardMarketCap()[indexCurrencyToBeChanged] + 10;
 
-        Currency updatedCurrency = new Currency(ticker, name, numberOfCoins, marketCap);
+        Currency updatedCurrency = new Currency.Builder()
+                .ticker(ticker)
+                .name(name)
+                .numberOfCoins(numberOfCoins)
+                .marketCap(marketCap)
+                .build();
 
         Optional<Currency> optionalCurrency = repository.findById(StandardData.getStandardTickers()[indexCurrencyToBeChanged]);
         if(optionalCurrency.isPresent()) {
-            Currency currency = optionalCurrency.get();
-            currency.setName(updatedCurrency.getName());
-            currency.setNumberOfCoins(updatedCurrency.getNumberOfCoins());
-            currency.setMarketCap(updatedCurrency.getMarketCap());
 
-            repository.save(currency);
+            repository.save(updatedCurrency);
 
 
             Optional<Currency> optionalCheckCurrency = repository.findById(StandardData.getStandardTickers()[indexCurrencyToBeChanged]);
@@ -149,18 +155,19 @@ public class CurrencyRepositoryTest {
         int indexCurrencyToBeChanged = 0;
         String ticker = StandardData.getStandardTickers()[indexCurrencyToBeChanged];
         String name = "updated " + StandardData.getStandardNames()[indexCurrencyToBeChanged];
-        long number_of_coins = StandardData.getStandardNrOfCoins()[indexCurrencyToBeChanged] + 10;
-        long market_cap = StandardData.getStandardMarketCap()[indexCurrencyToBeChanged] + 10;
+        long numberOfCoins = StandardData.getStandardNrOfCoins()[indexCurrencyToBeChanged] + 10;
+        long marketCap = StandardData.getStandardMarketCap()[indexCurrencyToBeChanged] + 10;
 
-        Currency updatedCurrency = new Currency(ticker, name, number_of_coins, market_cap);
+        Currency updatedCurrency = new Currency.Builder()
+                .ticker(ticker)
+                .name(name)
+                .numberOfCoins(numberOfCoins)
+                .marketCap(marketCap)
+                .build();
 
         Optional<Currency> optionalCurrency = repository.findById(StandardData.getStandardTickers()[indexCurrencyToBeChanged]);
         if(optionalCurrency.isPresent()) {
-            Currency currency = optionalCurrency.get();currency.setName(updatedCurrency.getName());
-            currency.setNumberOfCoins(updatedCurrency.getNumberOfCoins());
-            currency.setMarketCap(updatedCurrency.getMarketCap());
-
-            repository.save(currency);
+            repository.save(updatedCurrency);
             Iterable<Currency> repositoryCurrencies = repository.findAll();
             Currency[] currencies = StandardData.getStandardCurrencies();
             assertThat(repositoryCurrencies).hasSize(4).

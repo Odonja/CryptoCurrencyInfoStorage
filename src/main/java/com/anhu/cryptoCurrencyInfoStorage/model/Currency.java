@@ -23,47 +23,30 @@ public class Currency {
     @Column(name = "market_cap")
     private long marketCap;
 
-    public Currency(String ticker, String name, long numberOfCoins, long marketCap) {
-        this.ticker = ticker;
-        this.name = name;
-        this.numberOfCoins = numberOfCoins;
-        this.marketCap = marketCap;
+    public Currency() {
     }
 
-    public Currency() {
-
+    private Currency(Builder builder) {
+        this.ticker = builder.ticker;
+        this.name = builder.name;
+        this.numberOfCoins = builder.numberOfCoins;
+        this.marketCap = builder.marketCap;
     }
 
     public String getTicker() {
         return ticker;
     }
 
-    public void setTicker(String ticker) {
-        this.ticker = ticker;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public long getNumberOfCoins() {
         return numberOfCoins;
     }
 
-    public void setNumberOfCoins(long numberOfCoins) {
-        this.numberOfCoins = numberOfCoins;
-    }
-
     public long getMarketCap() {
         return marketCap;
-    }
-
-    public void setMarketCap(long marketCap) {
-        this.marketCap = marketCap;
     }
 
     @Override
@@ -92,5 +75,61 @@ public class Currency {
     public String toJson() {
         return "{\"ticker\":\"" + ticker + "\",\"name\":\"" + name +
                 "\",\"numberOfCoins\":" + numberOfCoins + ",\"marketCap\":" + marketCap + "}";
+    }
+
+    public static class Builder{
+
+        private String ticker;
+        private String name;
+        private long numberOfCoins;
+        private long marketCap;
+
+        public Builder(){
+        }
+
+        public Builder ticker(String ticker) {
+            this.ticker = ticker;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder numberOfCoins(long numberOfCoins) {
+            this.numberOfCoins = numberOfCoins;
+            return this;
+        }
+
+        public Builder marketCap(long marketCap) {
+            this.marketCap = marketCap;
+            return this;
+        }
+
+        public void setTicker(String ticker) {
+            this.ticker = ticker;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setNumberOfCoins(long numberOfCoins) {
+            this.numberOfCoins = numberOfCoins;
+        }
+
+        public void setMarketCap(long marketCap) {
+            this.marketCap = marketCap;
+        }
+
+        public String toJson() {
+            return "{\"ticker\":\"" + ticker + "\",\"name\":\"" + name +
+                    "\",\"numberOfCoins\":" + numberOfCoins + ",\"marketCap\":" + marketCap + "}";
+        }
+
+        public Currency build(){
+            return new Currency(this);
+        }
     }
 }

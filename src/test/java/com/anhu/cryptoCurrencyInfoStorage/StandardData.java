@@ -28,7 +28,12 @@ public class StandardData {
 
         Currency[] currencies = new Currency[4];
         for(int index = 0; index < currencies.length; index++){
-            currencies[index] = new Currency(tickers[index], names[index], coins[index], cap[index]);
+            currencies[index] = new Currency.Builder()
+                    .ticker(tickers[index])
+                    .name(names[index])
+                    .numberOfCoins(coins[index])
+                    .marketCap(cap[index])
+                    .build();
         }
         return currencies;
     }

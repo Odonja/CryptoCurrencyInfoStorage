@@ -10,12 +10,17 @@ public class CurrencyTest {
     public void testConstructor(){
         String ticker = "DOGE";
         String name = "Dogecoin";
-        long number_of_coins = 129400000;
-        long market_cap = 5310000;
-        Currency currency = new Currency(ticker, name, number_of_coins, market_cap);
+        long numberOfCoins = 129400000;
+        long marketCap = 5310000;
+        Currency currency = new Currency.Builder()
+                .ticker(ticker)
+                .name(name)
+                .numberOfCoins(numberOfCoins)
+                .marketCap(marketCap)
+                .build();
         assertEquals(ticker, currency.getTicker());
         assertEquals(name, currency.getName());
-        assertEquals(number_of_coins, currency.getNumberOfCoins());
-        assertEquals(market_cap, currency.getMarketCap());
+        assertEquals(numberOfCoins, currency.getNumberOfCoins());
+        assertEquals(marketCap, currency.getMarketCap());
     }
 }

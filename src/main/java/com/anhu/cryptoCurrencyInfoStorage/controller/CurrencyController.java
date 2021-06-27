@@ -46,11 +46,12 @@ public class CurrencyController {
 
     /**
      *
-     * @param currency
+     * @param currencyBuilder
      * @return
      */
     @PostMapping("/currencies")
-    public ResponseEntity<Currency> createCurrency(@RequestBody Currency currency) {
+    public ResponseEntity<Currency> createCurrency(@RequestBody Currency.Builder currencyBuilder) {
+        Currency currency = currencyBuilder.build();
         log.info("Post: /currencies :" + currency);
         Optional<Currency> currencyData = currencyRepository.findById(currency.getTicker());
         if(currencyData.isPresent()){
@@ -58,10 +59,9 @@ public class CurrencyController {
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);
         }
         try {
-            Currency newCurrency = currencyRepository.save(
-                    new Currency(currency.getTicker(), currency.getName(), currency.getNumberOfCoins(), currency.getMarketCap()));
-            log.info("HttpStatus.CREATED, returned " + newCurrency);
-            return new ResponseEntity<>(newCurrency, HttpStatus.CREATED);
+            Currency savedCurrency = currencyRepository.save(currency);
+            log.info("HttpStatus.CREATED, returned " + savedCurrency);
+            return new ResponseEntity<>(savedCurrency, HttpStatus.CREATED);
         } catch (Exception e) {
             log.info("HttpStatus.INTERNAL_SERVER_ERROR");
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -70,15 +70,16 @@ public class CurrencyController {
 
 
     @PutMapping("/currencies/{ticker}")
-    public ResponseEntity<Currency> updateCurrency(@PathVariable("ticker") String ticker, @RequestBody Currency currency) {
-        log.info("Put: /currencies/" + ticker + " :" + currency);
+    public ResponseEntity<Currency> updateCurrency(@PathVariable("ticker") String ticker, @RequestBody Currency.Builder currencyBuilder) {
+        Currency currencyToBeUpdated = currencyBuilder.build();
+        log.info("Put: /currencies/" + ticker + " :" + currencyToBeUpdated);
         Optional<Currency> currencyData = currencyRepository.findById(ticker);
 
         if (currencyData.isPresent()) {
-            Currency currencyToBeUpdated = currencyData.get();
-            currencyToBeUpdated.setName(currency.getName());
-            currencyToBeUpdated.setNumberOfCoins(currency.getNumberOfCoins());
-            currencyToBeUpdated.setMarketCap(currency.getMarketCap());
+//            Currency currencyToBeUpdated = currencyData.get();
+//            currencyToBeUpdated.setName(currency.getName());
+//            currencyToBeUpdated.setNumberOfCoins(currency.getNumberOfCoins());
+//            currencyToBeUpdated.setMarketCap(currency.getMarketCap());
 
             log.info("HttpStatus.OK, returned " + currencyToBeUpdated);
             return new ResponseEntity<>(currencyRepository.save(currencyToBeUpdated), HttpStatus.OK);
