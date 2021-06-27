@@ -3,7 +3,10 @@ package com.anhu.cryptoCurrencyInfoStorage.controller;
 import com.anhu.cryptoCurrencyInfoStorage.StandardData;
 import com.anhu.cryptoCurrencyInfoStorage.model.Currency;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,12 +32,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CurrencyControllerTest {
-
+public class CurrencyControllerTestWithoutChanges {
 
     @Autowired
     private MockMvc mockMvc;
-
 
     @Test
     public void testRetrieveById_idNotPresent_shouldGiveNotFoundStatusAndEmptyBody() throws Exception {
@@ -55,60 +56,6 @@ public class CurrencyControllerTest {
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.getContentAsString()).isEqualTo(currency.toJson());
-    }
-
-    @Test
-    public void testCreate_newCurrency_shouldGiveCreatedStatusAndCurrencyBody() throws Exception {
-        String ticker = "DOGE";
-        String name = "Dogecoin";
-        long number_of_coins = 129400000;
-        long market_cap = 5310000;
-        Currency newCurrency = new Currency(ticker, name, number_of_coins, market_cap);
-
-        MockHttpServletResponse response = mockMvc.perform(
-                post("/api/currencies").contentType(MediaType.APPLICATION_JSON).content(newCurrency.toJson())).andReturn().getResponse();
-
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.getContentAsString()).isEqualTo(newCurrency.toJson());
-    }
-
-    @Test
-    public void testCreate_existingCurrency_shouldGiveConflictStatusAndEmptyBody() throws Exception {
-        Currency newCurrency = StandardData.getStandardCurrencies()[0];
-
-        MockHttpServletResponse response = mockMvc.perform(
-                post("/api/currencies").contentType(MediaType.APPLICATION_JSON).content(newCurrency.toJson())).andReturn().getResponse();
-
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.CONFLICT.value());
-        assertThat(response.getContentAsString()).isEmpty();
-    }
-
-    @Test
-    public void testUpdate_idPresent_shouldGiveOkStatusAndCurrencyBody() throws Exception {
-        Currency updatedCurrency = StandardData.getStandardCurrencies()[0];
-        long newMarketCap = 123456000000L;
-        updatedCurrency.setMarketCap(newMarketCap);
-        String ticker = updatedCurrency.getTicker();
-        MockHttpServletResponse response = mockMvc.perform(
-                put("/api/currencies/" + ticker).contentType(MediaType.APPLICATION_JSON).content(updatedCurrency.toJson())).andReturn().getResponse();
-
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).isEqualTo(updatedCurrency.toJson());
-    }
-
-    @Test
-    public void testUpdate_idNotPresent_shouldGiveNotFoundStatusAndEmptyBody() throws Exception {
-        String ticker = "DOGE";
-        String name = "Dogecoin";
-        long number_of_coins = 129400000;
-        long market_cap = 5310000;
-        Currency newCurrency = new Currency(ticker, name, number_of_coins, market_cap);
-
-        MockHttpServletResponse response = mockMvc.perform(
-                put("/api/currencies/" + ticker).contentType(MediaType.APPLICATION_JSON).content(newCurrency.toJson())).andReturn().getResponse();
-
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
-        assertThat(response.getContentAsString()).isEmpty();
     }
 
     @Test
@@ -232,5 +179,4 @@ public class CurrencyControllerTest {
         expectedContent.append("]}");
         assertThat(response.getContentAsString()).isEqualTo(expectedContent.toString());
     }
-
 }
