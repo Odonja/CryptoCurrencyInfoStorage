@@ -22,6 +22,7 @@ public class CurrencyControllerTestWithChanges {
 
     @Test
     public void testCreate_newCurrency_shouldGiveCreatedStatusAndCurrencyBody() throws Exception {
+        //given
         String ticker = "DOGE";
         String name = "Dogecoin";
         long numberOfCoins = 129400000;
@@ -33,26 +34,32 @@ public class CurrencyControllerTestWithChanges {
                 .marketCap(marketCap)
                 .build();
 
+        //when
         MockHttpServletResponse response = mockMvc.perform(
                 post("/api/currencies").contentType(MediaType.APPLICATION_JSON).content(newCurrency.toJson())).andReturn().getResponse();
 
+        //then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.getContentAsString()).isEqualTo(newCurrency.toJson());
     }
 
     @Test
     public void testCreate_existingCurrency_shouldGiveConflictStatusAndEmptyBody() throws Exception {
+        //given
         Currency newCurrency = StandardData.getStandardCurrencies()[0];
 
+        //when
         MockHttpServletResponse response = mockMvc.perform(
                 post("/api/currencies").contentType(MediaType.APPLICATION_JSON).content(newCurrency.toJson())).andReturn().getResponse();
 
+        //then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CONFLICT.value());
         assertThat(response.getContentAsString()).isEmpty();
     }
 
     @Test
     public void testUpdate_idPresent_shouldGiveOkStatusAndCurrencyBody() throws Exception {
+        //given
         Currency oldCurrency = StandardData.getStandardCurrencies()[0];
         long newMarketCap = 123456000000L;
 
@@ -64,15 +71,18 @@ public class CurrencyControllerTestWithChanges {
                 .build();
         String ticker = updatedCurrency.getTicker();
 
+        //when
         MockHttpServletResponse response = mockMvc.perform(
                 put("/api/currencies/" + ticker).contentType(MediaType.APPLICATION_JSON).content(updatedCurrency.toJson())).andReturn().getResponse();
 
+        //then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.getContentAsString()).isEqualTo(updatedCurrency.toJson());
     }
 
     @Test
     public void testUpdate_idNotPresent_shouldGiveNotFoundStatusAndEmptyBody() throws Exception {
+        //given
         String ticker = "DOGE";
         String name = "Dogecoin";
         long numberOfCoins = 129400000;
@@ -84,9 +94,11 @@ public class CurrencyControllerTestWithChanges {
                 .marketCap(marketCap)
                 .build();
 
+        //when
         MockHttpServletResponse response = mockMvc.perform(
                 put("/api/currencies/" + ticker).contentType(MediaType.APPLICATION_JSON).content(newCurrency.toJson())).andReturn().getResponse();
 
+        //then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
         assertThat(response.getContentAsString()).isEmpty();
     }

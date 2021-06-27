@@ -123,11 +123,6 @@ public class Currency {
             this.marketCap = marketCap;
         }
 
-        public String toJson() {
-            return "{\"ticker\":\"" + ticker + "\",\"name\":\"" + name +
-                    "\",\"numberOfCoins\":" + numberOfCoins + ",\"marketCap\":" + marketCap + "}";
-        }
-
         public Currency build(){
             return new Currency(this);
         }

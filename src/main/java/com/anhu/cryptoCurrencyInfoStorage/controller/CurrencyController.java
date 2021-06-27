@@ -25,9 +25,9 @@ public class CurrencyController {
     private static final Logger log = LoggerFactory.getLogger(CurrencyController.class);
 
     /**
-     *
-     * @param ticker
-     * @return
+     * Retrieves a specific record
+     * @param ticker The ticker of the requested record
+     * @return the record if present, HttpStatus.NOT_FOUND otherwise
      */
     @GetMapping("/currencies/{ticker}")
     public ResponseEntity<Currency> getCurrencyByTicker(@PathVariable("ticker") String ticker) {
@@ -45,13 +45,14 @@ public class CurrencyController {
     }
 
     /**
-     *
-     * @param currencyBuilder
-     * @return
+     * Create a new record
+     * @param newCurrency The record to be created
+     * @return The record if not yet present or
+     * HttpStatus.CONFLICT if there already exists a record for ticker currencyBuilder.ticker
      */
     @PostMapping("/currencies")
-    public ResponseEntity<Currency> createCurrency(@RequestBody Currency.Builder currencyBuilder) {
-        Currency currency = currencyBuilder.build();
+    public ResponseEntity<Currency> createCurrency(@RequestBody Currency.Builder newCurrency) {
+        Currency currency = newCurrency.build();
         log.info("Post: /currencies :" + currency);
         Optional<Currency> currencyData = currencyRepository.findById(currency.getTicker());
         if(currencyData.isPresent()){
@@ -68,19 +69,19 @@ public class CurrencyController {
         }
     }
 
-
+    /**
+     * Updates a specific record
+     * @param ticker The ticker of the record to be updated
+     * @param currency The values of the new version of the record
+     * @return The updated record if the database has a record for this ticker, HttpStatus.NOT_FOUND otherwise
+     */
     @PutMapping("/currencies/{ticker}")
-    public ResponseEntity<Currency> updateCurrency(@PathVariable("ticker") String ticker, @RequestBody Currency.Builder currencyBuilder) {
-        Currency currencyToBeUpdated = currencyBuilder.build();
+    public ResponseEntity<Currency> updateCurrency(@PathVariable("ticker") String ticker, @RequestBody Currency.Builder currency) {
+        Currency currencyToBeUpdated = currency.build();
         log.info("Put: /currencies/" + ticker + " :" + currencyToBeUpdated);
         Optional<Currency> currencyData = currencyRepository.findById(ticker);
 
         if (currencyData.isPresent()) {
-//            Currency currencyToBeUpdated = currencyData.get();
-//            currencyToBeUpdated.setName(currency.getName());
-//            currencyToBeUpdated.setNumberOfCoins(currency.getNumberOfCoins());
-//            currencyToBeUpdated.setMarketCap(currency.getMarketCap());
-
             log.info("HttpStatus.OK, returned " + currencyToBeUpdated);
             return new ResponseEntity<>(currencyRepository.save(currencyToBeUpdated), HttpStatus.OK);
         } else {
@@ -89,6 +90,11 @@ public class CurrencyController {
         }
     }
 
+    /**
+     * Deletes a specific record
+     * @param ticker The ticker of the record to be deleted
+     * @return HttpStatus.NO_CONTENT when the record is successfully deleted, HttpStatus.INTERNAL_SERVER_ERROR otherwise
+     */
     @DeleteMapping("/currencies/{ticker}")
     public ResponseEntity<HttpStatus> deleteCurrency(@PathVariable("ticker") String ticker) {
         log.info("Delete: /currencies/" + ticker);
@@ -102,6 +108,14 @@ public class CurrencyController {
         }
     }
 
+    /**
+     * Retrieves a list of records
+     * @param page The requested page of the list of records
+     * @param size The size of the pages, default 3
+     * @param sort The values of the record the record will be sorted by, default ticker
+     * @param sortDirection The sorting direction of the sort, "desc" for descending, any other value for ascending
+     * @return A map with the requested list of records and paging info if paging was requested
+     */
     @GetMapping("/currencies")
     public ResponseEntity<Map<String, Object>> getAllCurrencies(
             @RequestParam(defaultValue = "-1") int page, // -1 to signal that no paging is asked
@@ -117,6 +131,7 @@ public class CurrencyController {
         log.info(logText.toString());
 
         try {
+            // retrieve make orders for sortiing
             List<Sort.Order> orders = new ArrayList<>();
             Sort.Direction orderSortDirection = getSortDirection(sortDirection);
             for(String sortField : sort){
@@ -125,18 +140,21 @@ public class CurrencyController {
 
             List<Currency> currencies = new ArrayList<>();
             Map<String, Object> response = new HashMap<>();
-            if(page >= 0){
+            if(page >= 0){ // paging is requested
+                // get list of records for requested page
                 Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
                 Page<Currency> pageOfCurrencies = currencyRepository.findAll(pagingSort);
                 currencies.addAll(pageOfCurrencies.getContent());
 
+                // add list of records and paging information to the response
                 response.put("currencies", currencies);
                 response.put("currentPage", pageOfCurrencies.getNumber());
                 response.put("totalItems", pageOfCurrencies.getTotalElements());
                 response.put("totalPages", pageOfCurrencies.getTotalPages());
 
-            }else{
+            }else{ // no paging is requested
                 currencies.addAll(currencyRepository.findAll(Sort.by(orders)));
+                // add only list of records to the response
                 response.put("currencies", currencies);
             }
 
