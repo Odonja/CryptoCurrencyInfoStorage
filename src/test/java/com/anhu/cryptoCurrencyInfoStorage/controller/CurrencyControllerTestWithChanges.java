@@ -103,4 +103,34 @@ public class CurrencyControllerTestWithChanges {
         assertThat(response.getContentAsString()).isEmpty();
     }
 
+    @Test
+    public void testDelete_idPresent_shouldGiveNoContentStatusAndEmptyBody() throws Exception {
+        //given
+        Currency currency = StandardData.getStandardCurrencies()[3];
+
+        //when
+        MockHttpServletResponse response = mockMvc.perform(
+                delete("/api/currencies/" + currency.getTicker())
+                        .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+
+        //then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(response.getContentAsString()).isEmpty();
+    }
+
+    @Test
+    public void testDelete_idNotPresent_shouldGiveNotFoundStatusAndEmptyBody() throws Exception {
+        //given
+        String ticker = "nonExistingTicker";
+
+        //when
+        MockHttpServletResponse response = mockMvc.perform(
+                delete("/api/currencies/" + ticker)
+                        .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+
+        //then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        assertThat(response.getContentAsString()).isEmpty();
+    }
+
 }

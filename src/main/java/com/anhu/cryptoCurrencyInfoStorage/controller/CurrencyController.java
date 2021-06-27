@@ -56,7 +56,7 @@ public class CurrencyController {
     @PostMapping("/currencies")
     public ResponseEntity<Currency> createCurrency(@RequestBody Currency.Builder newCurrency) {
         Currency currency = newCurrency.build();
-        log.info("Post: /currencies :" + currency);
+        log.info("Post: /currencies :" + currency.toJson());
         Optional<Currency> currencyData = currencyRepository.findById(currency.getTicker());
         if(currencyData.isPresent()){
             log.info("HttpStatus.CONFLICT");
@@ -81,7 +81,7 @@ public class CurrencyController {
     @PutMapping("/currencies/{ticker}")
     public ResponseEntity<Currency> updateCurrency(@PathVariable("ticker") String ticker, @RequestBody Currency.Builder currency) {
         Currency currencyToBeUpdated = currency.build();
-        log.info("Put: /currencies/" + ticker + " :" + currencyToBeUpdated);
+        log.info("Put: /currencies/" + ticker + " :" + currencyToBeUpdated.toJson());
         Optional<Currency> currencyData = currencyRepository.findById(ticker);
 
         if (currencyData.isPresent()) {
