@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+/**
+ * The CurrencyController provides a REST interface to access the data base.
+ */
 @RestController
 @RequestMapping("/api")
 public class CurrencyController {

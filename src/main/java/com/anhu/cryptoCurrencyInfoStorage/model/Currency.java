@@ -6,6 +6,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Objects;
 
+/**
+ * Currency is the entity used to store records in the CurrencyRepository.
+ */
 @Entity
 @Table(name = "currencies")
 public class Currency {
