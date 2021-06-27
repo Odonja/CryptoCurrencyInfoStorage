@@ -23,7 +23,6 @@ public class Currency {
     @Column(name = "market_cap")
     private long marketCap;
 
-
     public Currency(String ticker, String name, long numberOfCoins, long market_cap) {
         this.ticker = ticker;
         this.name = name;
@@ -88,5 +87,10 @@ public class Currency {
                 ", number_of_coins=" + numberOfCoins +
                 ", market_cap=" + marketCap +
                 '}';
+    }
+
+    public String toJson() {
+        return "{\"ticker\":\"" + ticker + "\",\"name\":\"" + name +
+                "\",\"numberOfCoins\":" + numberOfCoins + ",\"marketCap\":" + marketCap + "}";
     }
 }
